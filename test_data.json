@@ -1,0 +1,329 @@
+{
+    "test_data_sets": {
+        "valid_customer_data": [
+            {
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "address": "123 Main Street, New York, NY 10001"
+            },
+            {
+                "name": "Jane Smith",
+                "email": "jane.smith@test.com",
+                "address": "456 Oak Avenue, Los Angeles, CA 90001"
+            },
+            {
+                "name": "Michael Johnson",
+                "email": "m.johnson@email.com",
+                "address": "789 Pine Road, Chicago, IL 60601"
+            }
+        ],
+        "invalid_customer_data": [
+            {
+                "name": "",
+                "email": "john.doe@example.com",
+                "address": "123 Main Street",
+                "expected_error": "Name is required"
+            },
+            {
+                "name": "John Doe",
+                "email": "invalid-email",
+                "address": "123 Main Street",
+                "expected_error": "Valid email is required"
+            },
+            {
+                "name": "John Doe",
+                "email": "test@example.com",
+                "address": "",
+                "expected_error": "Address is required"
+            },
+            {
+                "name": "John Doe",
+                "email": "missing-at-sign.com",
+                "address": "123 Main Street",
+                "expected_error": "Valid email is required"
+            },
+            {
+                "name": "John Doe",
+                "email": "missing-domain@",
+                "address": "123 Main Street",
+                "expected_error": "Valid email is required"
+            }
+        ],
+        "discount_codes": [
+            {
+                "code": "SAVE15",
+                "valid": true,
+                "discount_rate": 0.15,
+                "expected_message": "Discount code applied successfully!"
+            },
+            {
+                "code": "save15",
+                "valid": true,
+                "discount_rate": 0.15,
+                "note": "Should work with lowercase (converted to uppercase)"
+            },
+            {
+                "code": "INVALID",
+                "valid": false,
+                "expected_error": "Invalid discount code"
+            },
+            {
+                "code": "",
+                "valid": false,
+                "expected_error": "Please enter a discount code"
+            },
+            {
+                "code": "EXPIRED",
+                "valid": false,
+                "expected_error": "Invalid discount code"
+            }
+        ],
+        "products": [
+            {
+                "id": "laptop",
+                "name": "Laptop Pro 15",
+                "price": 1299.99,
+                "button_id": "add-laptop"
+            },
+            {
+                "id": "mouse",
+                "name": "Wireless Mouse",
+                "price": 29.99,
+                "button_id": "add-mouse"
+            },
+            {
+                "id": "cable",
+                "name": "USB-C Cable",
+                "price": 15.99,
+                "button_id": "add-cable"
+            }
+        ],
+        "shipping_options": [
+            {
+                "id": "standard-shipping",
+                "name": "Standard Shipping",
+                "cost": 0,
+                "value": "0",
+                "delivery_time": "5-7 business days"
+            },
+            {
+                "id": "express-shipping",
+                "name": "Express Shipping",
+                "cost": 10,
+                "value": "10",
+                "delivery_time": "2-3 business days"
+            }
+        ],
+        "payment_methods": [
+            {
+                "id": "credit-card",
+                "name": "Credit Card",
+                "value": "credit-card",
+                "default": true
+            },
+            {
+                "id": "paypal",
+                "name": "PayPal",
+                "value": "paypal",
+                "default": false
+            }
+        ]
+    },
+    "test_scenarios": {
+        "cart_operations": [
+            {
+                "scenario": "Add single product to cart",
+                "steps": [
+                    "Click add-laptop button",
+                    "Verify cart shows 1 Laptop Pro 15",
+                    "Verify quantity is 1",
+                    "Verify subtotal is $1299.99"
+                ]
+            },
+            {
+                "scenario": "Add multiple products to cart",
+                "steps": [
+                    "Click add-laptop button",
+                    "Click add-mouse button",
+                    "Click add-cable button",
+                    "Verify cart shows all 3 products",
+                    "Verify subtotal is $1345.97"
+                ]
+            },
+            {
+                "scenario": "Increase product quantity",
+                "steps": [
+                    "Add laptop to cart",
+                    "Click plus button for laptop",
+                    "Verify quantity is 2",
+                    "Verify subtotal is $2599.98"
+                ]
+            },
+            {
+                "scenario": "Decrease product quantity",
+                "steps": [
+                    "Add laptop to cart",
+                    "Click plus button twice",
+                    "Click minus button once",
+                    "Verify quantity is 2",
+                    "Verify subtotal is $2599.98"
+                ]
+            },
+            {
+                "scenario": "Remove product from cart",
+                "steps": [
+                    "Add laptop to cart",
+                    "Click remove button",
+                    "Verify cart shows 'Your cart is empty'",
+                    "Verify subtotal is $0.00"
+                ]
+            }
+        ],
+        "discount_scenarios": [
+            {
+                "scenario": "Apply valid discount code",
+                "discount_code": "SAVE15",
+                "cart_items": [
+                    {
+                        "product": "laptop",
+                        "quantity": 1
+                    }
+                ],
+                "expected_subtotal": 1299.99,
+                "expected_discount": 194.99,
+                "expected_total_before_shipping": 1105.00
+            },
+            {
+                "scenario": "Apply discount with multiple items",
+                "discount_code": "SAVE15",
+                "cart_items": [
+                    {
+                        "product": "laptop",
+                        "quantity": 1
+                    },
+                    {
+                        "product": "mouse",
+                        "quantity": 2
+                    }
+                ],
+                "expected_subtotal": 1359.97,
+                "expected_discount": 204.00,
+                "expected_total_before_shipping": 1155.97
+            }
+        ],
+        "validation_scenarios": [
+            {
+                "scenario": "Submit with empty cart",
+                "expected_alert": "Your cart is empty!"
+            },
+            {
+                "scenario": "Submit with missing name",
+                "cart_items": [
+                    {
+                        "product": "laptop",
+                        "quantity": 1
+                    }
+                ],
+                "customer_data": {
+                    "name": "",
+                    "email": "test@example.com",
+                    "address": "123 Main St"
+                },
+                "expected_error": "Name is required"
+            },
+            {
+                "scenario": "Submit with invalid email",
+                "cart_items": [
+                    {
+                        "product": "laptop",
+                        "quantity": 1
+                    }
+                ],
+                "customer_data": {
+                    "name": "John Doe",
+                    "email": "invalid-email",
+                    "address": "123 Main St"
+                },
+                "expected_error": "Valid email is required"
+            }
+        ]
+    },
+    "expected_calculations": {
+        "price_calculation_examples": [
+            {
+                "description": "Single item, no discount, standard shipping",
+                "items": [
+                    {
+                        "name": "Laptop Pro 15",
+                        "price": 1299.99,
+                        "quantity": 1
+                    }
+                ],
+                "discount_code": null,
+                "shipping": "standard",
+                "expected_subtotal": 1299.99,
+                "expected_discount": 0,
+                "expected_shipping": 0,
+                "expected_total": 1299.99
+            },
+            {
+                "description": "Single item, with discount, standard shipping",
+                "items": [
+                    {
+                        "name": "Laptop Pro 15",
+                        "price": 1299.99,
+                        "quantity": 1
+                    }
+                ],
+                "discount_code": "SAVE15",
+                "shipping": "standard",
+                "expected_subtotal": 1299.99,
+                "expected_discount": 195.00,
+                "expected_shipping": 0,
+                "expected_total": 1104.99
+            },
+            {
+                "description": "Single item, with discount, express shipping",
+                "items": [
+                    {
+                        "name": "Laptop Pro 15",
+                        "price": 1299.99,
+                        "quantity": 1
+                    }
+                ],
+                "discount_code": "SAVE15",
+                "shipping": "express",
+                "expected_subtotal": 1299.99,
+                "expected_discount": 195.00,
+                "expected_shipping": 10,
+                "expected_total": 1114.99
+            },
+            {
+                "description": "Multiple items, with discount, express shipping",
+                "items": [
+                    {
+                        "name": "Laptop Pro 15",
+                        "price": 1299.99,
+                        "quantity": 2
+                    },
+                    {
+                        "name": "Wireless Mouse",
+                        "price": 29.99,
+                        "quantity": 1
+                    },
+                    {
+                        "name": "USB-C Cable",
+                        "price": 15.99,
+                        "quantity": 3
+                    }
+                ],
+                "discount_code": "SAVE15",
+                "shipping": "express",
+                "expected_subtotal": 2677.94,
+                "expected_discount": 401.69,
+                "expected_shipping": 10,
+                "expected_total": 2286.25
+            }
+        ]
+    }
+}
