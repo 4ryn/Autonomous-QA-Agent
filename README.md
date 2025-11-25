@@ -102,18 +102,6 @@ GROQ_MODEL=llama-3.1-8b-instant
   4. Generate and copy API key
   5. Update .env file
 
-### Step 5: Verify Installation
-
-```bash
-# Check Grok is running
-curl http://ost:11434/api/tags
-
-# Check Qdrant Cloud connection (replace with your credentials)
-curl -H "api-key: YOUR_API_KEY" https://YOUR-CLUSTER.cloud.qdrant.io/collections
-
-# Or use the automated setup script
-python setup.py
-```
 
 ## Project Structure
 
