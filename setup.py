@@ -1,8 +1,3 @@
-"""
-Setup and verification script for Autonomous QA Agent
-Run this script to verify all dependencies and services are properly configured
-"""
-
 import sys
 import subprocess
 import requests
